@@ -15,6 +15,7 @@
  */
 package com.ebay.myriad.configuration;
 
+import com.ebay.myriad.scheduler.yarn.interceptor.InterceptorRegistry;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -22,7 +23,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import java.util.Map;
 
 /**
- * Myriad Configuration commonly defined in the YML file
+ * Myriad Configuration commonly defined in the YML file:
+ * <pre>
  * mesosMaster: 10.0.2.15:5050
  * checkpoint: false
  * frameworkFailoverTimeout: 43200000
@@ -30,27 +32,30 @@ import java.util.Map;
  * nativeLibrary: /usr/local/lib/libmesos.so
  * zkServers: localhost:2181
  * zkTimeout: 20000
+ * reconcilationDelay: 10000
+ * maxReconcileAttempts: 10
  * profiles:
- * small:
- * cpu: 1
- * mem: 1100
- * medium:
- * cpu: 2
- * mem: 2048
- * large:
- * cpu: 4
- * mem: 4096
+ *   small:
+ *     cpu: 1
+ *     mem: 1100
+ *   medium:
+ *     cpu: 2
+ *     mem: 2048
+ *   large:
+ *     cpu: 4
+ *     mem: 4096
  * rebalancer: false
  * nodemanager:
- * jvmMaxMemoryMB: 1024
- * user: hduser
- * cpus: 0.2
- * cgroups: false
+ *   jvmMaxMemoryMB: 1024
+ *   user: hduser
+ *   cpus: 0.2
+ *   cgroups: false
  * executor:
- * jvmMaxMemoryMB: 256
- * path: file://localhost/usr/local/libexec/mesos/myriad-executor-0.0.1.jar
+ *   jvmMaxMemoryMB: 256
+ *   path: file://localhost/usr/local/libexec/mesos/myriad-executor-0.0.1.jar
  * yarnEnvironment:
- * YARN_HOME: /usr/local/hadoop
+ *   YARN_HOME: /usr/local/hadoop
+ * </pre>
  */
 public class MyriadConfiguration {
     /**
@@ -73,6 +78,16 @@ public class MyriadConfiguration {
     public static final String DEFAULT_NATIVE_LIBRARY = "/usr/local/lib/libmesos.so";
 
     public static final Integer DEFAULT_ZK_TIMEOUT = 20000;
+
+    /**
+     * Default delay between reconcile attempts.
+     */
+    public static final Integer DEFAULT_RECONCILIATION_DELAY_MS = 10000;
+
+    /**
+     * Maximum number of reconcilation attempts.
+     */
+    public static final Integer DEFAULT_MAX_RECONCILE_ATTEMPTS = 10;
 
     @JsonProperty
     @NotEmpty
@@ -113,6 +128,12 @@ public class MyriadConfiguration {
 
     @JsonProperty
     private Integer zkTimeout;
+
+    @JsonProperty
+    private Integer reconciliationDelayMillis;
+
+    @JsonProperty
+    private Integer maxReconcileAttempts;
 
     @JsonProperty
     @NotEmpty
@@ -174,5 +195,13 @@ public class MyriadConfiguration {
 
     public Map<String, String> getYarnEnvironment() {
         return yarnEnvironment;
+    }
+
+    public Integer getReconciliationDelayMillis() {
+        return this.reconciliationDelayMillis != null ? this.reconciliationDelayMillis : DEFAULT_RECONCILIATION_DELAY_MS;
+    }
+
+    public Integer getMaxReconcileAttempts() {
+        return this.maxReconcileAttempts != null ? this.maxReconcileAttempts : DEFAULT_MAX_RECONCILE_ATTEMPTS;
     }
 }

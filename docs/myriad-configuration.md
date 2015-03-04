@@ -32,6 +32,12 @@ zkServers: localhost:2181
 # ZK Session timeout
 zkTimeout: 20000
 
+# The delay between reconcile attempts
+reconciliationDelayMillis: 10000
+
+# Maximum number of reconciliation attempts.
+maxReconcileAttempts: 10
+
 # The node manager profiles. The REST API to flex up expects one of the profiles defined here.
 # Admin can define custom profiles (requires restart of Resource Manager)
 profiles:

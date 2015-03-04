@@ -18,9 +18,6 @@ import java.util.Date;
 public class ReconcileService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReconcileService.class);
 
-    public static final long DEFAULT_RECONCILATION_DELAY_MS = 10000;
-    public static final long MAX_RECONCILE_ATTEMPTS = 10;
-
     private SchedulerState state;
     private MyriadConfiguration cfg;
     private Date lastReconcileTime;
@@ -45,10 +42,12 @@ public class ReconcileService {
 
         int attempt = 1;
 
-        while (attempt <= MAX_RECONCILE_ATTEMPTS) {
+        Integer maxReconcileAttempts = this.cfg.getMaxReconcileAttempts();
+        Integer reconciliationDelayMillis = this.cfg.getReconciliationDelayMillis();
+        while (attempt <= maxReconcileAttempts) {
             try {
                 // TODO(mohit): Using exponential backoff here, maybe backoff strategy should be configurable.
-                Thread.sleep(DEFAULT_RECONCILATION_DELAY_MS * attempt);
+                Thread.sleep(reconciliationDelayMillis * attempt);
             } catch (InterruptedException e) {
                 LOGGER.error("Interrupted", e);
             }
