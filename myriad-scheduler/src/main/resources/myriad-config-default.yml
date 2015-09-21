@@ -44,3 +44,4 @@ yarnEnvironment:
   #JAVA_HOME: /usr/lib/jvm/java-default #System dependent, but sometimes necessary
 mesosAuthenticationPrincipal:
 mesosAuthenticationSecretFilename:
+clusterId: green

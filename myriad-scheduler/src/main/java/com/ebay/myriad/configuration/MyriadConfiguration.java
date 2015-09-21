@@ -148,6 +148,8 @@ public class MyriadConfiguration {
   @JsonProperty
   private String mesosAuthenticationSecretFilename;
 
+  @JsonProperty
+  private String clusterId;
 
   public MyriadConfiguration() {
   }
@@ -235,4 +237,7 @@ public class MyriadConfiguration {
     return mesosAuthenticationPrincipal;
   }
 
+  public String getClusterId() {
+    return clusterId;
+  }
 }
